@@ -1,5 +1,5 @@
 ---
-title: "Working With The Garage Door Up - ZScore"
+title: "ZScore Analyis"
 author: "Patrick"
 date: '2020-05-04'
 output:
@@ -12,19 +12,23 @@ knitr::opts_chunk$set(collapse = TRUE)
 ```
 
 
-Background:
+#Background:
 The Altman Z Score is
 
 
-Questions:
+#Questions:
 How does the Altman Z-Score work?
- How much should we remove from the dataset?
-Why are these values so skewed? How do we differentiate between values that are skewed+important vs those that just create noise? 
+
+How much should we remove from the dataset?
+
+Why are these values so skewed? 
+
+How do we differentiate between values that are skewed+important vs those that just create noise? 
 
 
 
 
-Exploration:
+#Exploration:
 
 
 We can see that the data is skewed heavily towards the negative so removing this data is necessary to effecitvely see how the z-score is changing.
@@ -74,5 +78,8 @@ ggplot(ZscoreGroupedbyFY, aes(x = FYEAR, y = Zscore))+
 
 ```
 
+This graph represents the few intuitions that we may have had about Z-scores in the market during this period:
+1) The average Z-score should be positive because we expect the average company to not be in financial distress
+2) The Z-score should have been skewing downwards during the recession
 
-
+The thing that interests me about this graph is the continual decline since 2010. Why is this happening? Are more companies in financial distress? 
