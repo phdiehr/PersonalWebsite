@@ -12,6 +12,10 @@ ignoreFiles = ["\\.Rmd$", "\\.Rmarkdown$", "_files$", "_cache$"]
 [[menu.main]]
     name = "About"
     url = "/about/"
+    
+[[menu.main]]
+    name = "Posts"
+    url = "pdiehr.com"
 
 [[menu.main]]
     name = "Twitter"
