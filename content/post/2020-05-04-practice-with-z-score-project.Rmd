@@ -1,24 +1,25 @@
 ---
-title: Working With The Garage Door Up - ZScore
-author: Patrick
+title: "Working With The Garage Door Up - ZScore"
+author: "Patrick"
 date: '2020-05-04'
+output:
+  html_document:
+    df_print: paged
 slug: practice-with-z-score-project
-categories:
-  - Accounting
-tags:
-  - zscore
-  - R Markdown
-draft: FALSE
 ---
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(collapse = TRUE)
+```
+
 
 Background:
 The Altman Z Score is
 
 
 Questions:
-[1] How does the Altman Z-Score work?
-[2] How much should we remove from the dataset?
-[3] Why are these values so skewed? How do we differentiate between values that are skewed+important vs those that just create noise? 
+How does the Altman Z-Score work?
+ How much should we remove from the dataset?
+Why are these values so skewed? How do we differentiate between values that are skewed+important vs those that just create noise? 
 
 
 
@@ -26,8 +27,12 @@ Questions:
 Exploration:
 
 
-We can see that the data is skewed heavily towards the negative so removing this data is necessary to effecitvely see how the z-score is changing.[2] [3]
+We can see that the data is skewed heavily towards the negative so removing this data is necessary to effecitvely see how the z-score is changing.
 ```{r zscore}
+library(readxl)
+library(ggplot2)
+library(dplyr)
+ZScoreYearsSummaryV3 <- read_excel("~/Downloads/ZScoreYearsSummaryV3.xlsx")
 plotthis <- ZScoreYearsSummaryV3 %>% 
   mutate(Year = substr(ZScoreYearsSummaryV3$DATADATE,1,4)) %>%
   group_by(Year) %>% 
@@ -39,7 +44,23 @@ plot(plotthis)
 
 Once removing this information we find the following changes: 
 
-```{r zscore}
+```{r zscore2}
+library(readxl)
+library(ggplot2)
+library(dplyr)
+library(haven)
+q188f447abac283de <- read_sas("~/Downloads/q188f447abac283de.sas7bdat", 
+    NULL)
+
+A = 1.2*(q188f447abac283de$WCAP/q188f447abac283de$AT)
+B = 1.4*(q188f447abac283de$RE/q188f447abac283de$AT)
+C = 3.3*(q188f447abac283de$EBIT/q188f447abac283de$LT)
+D = 0.6*(q188f447abac283de$MKVALT/q188f447abac283de$LT)
+E = 1.0*(q188f447abac283de$SALE/q188f447abac283de$AT)
+
+DataZscore <- q188f447abac283de %>% 
+  mutate(Zscore = A+B+C+D+E) %>% 
+  filter(Zscore != 'NA', Zscore > -2.199, Zscore < 13)
 
 ZscoreGroupedbyFY <- DataZscore %>% 
   group_by(FYEAR) %>% 

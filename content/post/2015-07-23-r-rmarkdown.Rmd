@@ -11,6 +11,6 @@ knitr::opts_chunk$set(collapse = TRUE)
 ```
 
 Background:
-The Altman Z Score is
+The Altman Z Score is cool
 
 

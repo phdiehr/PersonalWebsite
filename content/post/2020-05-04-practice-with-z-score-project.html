@@ -1,0 +1,66 @@
+---
+title: "Working With The Garage Door Up - ZScore"
+author: "Patrick"
+date: '2020-05-04'
+output:
+  html_document:
+    df_print: paged
+slug: practice-with-z-score-project
+---
+
+
+
+<p>Background:
+The Altman Z Score is</p>
+<p>Questions:
+How does the Altman Z-Score work?
+How much should we remove from the dataset?
+Why are these values so skewed? How do we differentiate between values that are skewed+important vs those that just create noise?</p>
+<p>Exploration:</p>
+<p>We can see that the data is skewed heavily towards the negative so removing this data is necessary to effecitvely see how the z-score is changing.</p>
+<pre class="r"><code>library(readxl)
+library(ggplot2)
+library(dplyr)
+## 
+## Attaching package: &#39;dplyr&#39;
+## The following objects are masked from &#39;package:stats&#39;:
+## 
+##     filter, lag
+## The following objects are masked from &#39;package:base&#39;:
+## 
+##     intersect, setdiff, setequal, union
+ZScoreYearsSummaryV3 &lt;- read_excel(&quot;~/Downloads/ZScoreYearsSummaryV3.xlsx&quot;)
+plotthis &lt;- ZScoreYearsSummaryV3 %&gt;% 
+  mutate(Year = substr(ZScoreYearsSummaryV3$DATADATE,1,4)) %&gt;%
+  group_by(Year) %&gt;% 
+  summarise(mean(Avg_ZScore))
+
+plot(plotthis)</code></pre>
+<p><img src="/post/2020-05-04-practice-with-z-score-project_files/figure-html/zscore-1.png" width="672" /></p>
+<p>Once removing this information we find the following changes:</p>
+<pre class="r"><code>library(readxl)
+library(ggplot2)
+library(dplyr)
+library(haven)
+q188f447abac283de &lt;- read_sas(&quot;~/Downloads/q188f447abac283de.sas7bdat&quot;, 
+    NULL)
+
+A = 1.2*(q188f447abac283de$WCAP/q188f447abac283de$AT)
+B = 1.4*(q188f447abac283de$RE/q188f447abac283de$AT)
+C = 3.3*(q188f447abac283de$EBIT/q188f447abac283de$LT)
+D = 0.6*(q188f447abac283de$MKVALT/q188f447abac283de$LT)
+E = 1.0*(q188f447abac283de$SALE/q188f447abac283de$AT)
+
+DataZscore &lt;- q188f447abac283de %&gt;% 
+  mutate(Zscore = A+B+C+D+E) %&gt;% 
+  filter(Zscore != &#39;NA&#39;, Zscore &gt; -2.199, Zscore &lt; 13)
+
+ZscoreGroupedbyFY &lt;- DataZscore %&gt;% 
+  group_by(FYEAR) %&gt;% 
+  summarise(Zscore=mean(Zscore))
+
+ggplot(ZscoreGroupedbyFY, aes(x = FYEAR, y = Zscore))+
+  geom_line()+
+  geom_point()+
+  ggtitle(&#39;Avg Zscore by Year&#39;)</code></pre>
+<p><img src="/post/2020-05-04-practice-with-z-score-project_files/figure-html/zscore2-1.png" width="672" /></p>
