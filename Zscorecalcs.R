@@ -30,3 +30,6 @@ ggplot(ZscoreGroupedbyFY, aes(x = FYEAR, y = Zscore))+
 plot(ZscoreGroupedbyFY)
 
 blogdown::serve_site()
+
+
+dogs %>% head()
